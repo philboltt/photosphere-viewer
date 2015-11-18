@@ -17,9 +17,55 @@
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
+  <link rel="stylesheet" href="photosphere/static/js/photo-sphere-viewer.min.css"/>
+  <script src="photosphere/static/js/photo-sphere-viewer.min.js"></script>
 </head>
 
 <body>
+  <div id="photosphere"></div>
+  <div style="width: 0; height: 0; overflow: hidden;">
+    <input id="PhotoPicker" type="file" accept="image/*">
+  </div>
+  <button class="lovely" id="PhotoButton">
+    1. Select Photo
+  </button>
+  <img src="" height="200" alt="Image preview...">
+
+  <script>
+    var preview = document.querySelector('img');
+    var reader  = new FileReader();
+
+    $('#PhotoButton').click(function() {
+       $('#PhotoPicker').trigger('click');
+       return false;
+     });
+
+    $('#PhotoPicker').on('change', function(e) {
+      e.preventDefault();
+      if(this.files.length === 0) return;
+      var imageFile = this.files[0];
+      console.log(imageFile);
+
+      reader.readAsDataURL(imageFile);
+      reader.onloadend = function () {
+        preview.src = reader.result;
+        var PSV = new PhotoSphereViewer({
+          panorama: reader.result,
+          container: document.getElementById('photosphere'),
+          navbar: true,
+          caption: 'Bryce Canyon National Park <b>&copy; Mark Doliner</b>',
+          default_fov: 70,
+          size: {
+            height: 500
+          }
+      });
+
+      }
+
+      
+    });
+    
+  </script>
 </body>
-	<input id="PhotoPicker" type="file" accept="image/*" />
+
 </html>
